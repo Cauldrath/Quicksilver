@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -412,6 +412,7 @@
     <Compile Include="Features\Product\Models\FashionBundle.cs" />
     <Compile Include="Features\Product\Models\FashionPackage.cs" />
     <Compile Include="Features\Product\ViewModelFactories\CatalogEntryViewModelFactory.cs" />
+    <Compile Include="Features\Product\ViewModelFactories\FlagshipProductViewModelFactory.cs" />
     <Compile Include="Features\Product\ViewModels\FashionBundleViewModel.cs" />
     <Compile Include="Features\Product\ViewModels\FashionPackageViewModel.cs" />
     <Compile Include="Features\Recommendations\Controllers\RecommendationsController.cs" />
@@ -425,8 +426,10 @@
     <Compile Include="Features\Recommendations\Services\IRecommendationService.cs" />
     <Compile Include="Features\Recommendations\ViewModels\RecommendationsViewModel.cs" />
     <Compile Include="Features\ResetPassword\ViewModels\ResetPasswordMailPageViewModel.cs" />
+    <Compile Include="Features\Search\ViewModelFactories\FlagshipProductIndexViewModelFactory.cs" />
     <Compile Include="Features\Shared\Controllers\StandardPageController.cs" />
     <Compile Include="Features\Shared\Services\CatalogContentService.cs" />
+    <Compile Include="Features\Shared\ViewModels\FlagshipViewModels.cs" />
     <Compile Include="Features\Shared\ViewModels\CountryRegionViewModel.cs" />
     <Compile Include="Features\ErrorHandling\Controllers\ErrorHandlingController.cs" />
     <Compile Include="Features\ErrorHandling\ViewModels\ErrorViewModel.cs" />
@@ -1001,10 +1004,10 @@
     <AspNetCompiler VirtualPath="temp" PhysicalPath="$(WebProjectOutputDir)" />
   </Target>
   <ItemGroup>
-    <Content Include="modules\_protected\EPiServer.Commerce.Shell\EPiServer.Commerce.Shell.zip"/>
-    <Content Include="modules\_protected\Commerce\Commerce.zip"/>
-    <Content Include="modules\_protected\EPiServer.Commerce.Shell.ManagerIntegration\EPiServer.Commerce.Shell.ManagerIntegration.zip"/>
-    <Content Include="modules\_protected\EPiServer.Commerce.UI.CustomerService\EPiServer.Commerce.UI.CustomerService.zip"/>
+    <Content Include="modules\_protected\EPiServer.Commerce.Shell\EPiServer.Commerce.Shell.zip" />
+    <Content Include="modules\_protected\Commerce\Commerce.zip" />
+    <Content Include="modules\_protected\EPiServer.Commerce.Shell.ManagerIntegration\EPiServer.Commerce.Shell.ManagerIntegration.zip" />
+    <Content Include="modules\_protected\EPiServer.Commerce.UI.CustomerService\EPiServer.Commerce.UI.CustomerService.zip" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="EPiServer.Business.Commerce, Culture=neutral, PublicKeyToken=8fe83dea738b45b7, processorArchitecture=MSIL">

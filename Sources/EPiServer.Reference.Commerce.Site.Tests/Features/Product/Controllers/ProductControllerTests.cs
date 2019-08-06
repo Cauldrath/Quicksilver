@@ -84,6 +84,7 @@ namespace EPiServer.Reference.Commerce.Site.Tests.Features.Product.Controllers
         }
 
         private readonly Mock<CatalogEntryViewModelFactory> _viewModelFactoryMock;
+        private readonly Mock<FlagshipProductViewModelFactory> _flagshipProductViewModelFactoryMock;
         private readonly Mock<HttpContextBase> _httpContextBaseMock;
         private readonly Mock<IRecommendationService> _recommendationServiceMock;
         private readonly Mock<ReferenceConverter> _referenceConverterMock;
@@ -101,6 +102,7 @@ namespace EPiServer.Reference.Commerce.Site.Tests.Features.Product.Controllers
             _httpContextBaseMock.SetupGet(x => x.Request).Returns(request.Object);
 
             _viewModelFactoryMock = new Mock<CatalogEntryViewModelFactory>(null, null, null, null);
+            _flagshipProductViewModelFactoryMock = new Mock<FlagshipProductViewModelFactory>(null, null, null, null);
             _recommendationServiceMock = new Mock<IRecommendationService>();
             _recommendationServiceMock
                 .Setup(m => m.TrackProductAsync(It.IsAny<HttpContextBase>(), It.IsAny<string>(), It.IsAny<bool>()))
@@ -118,7 +120,7 @@ namespace EPiServer.Reference.Commerce.Site.Tests.Features.Product.Controllers
 
         private ProductController CreateController()
         {
-            var controller = new ProductController(() => _isInEditMode, _viewModelFactoryMock.Object);
+            var controller = new ProductController(() => _isInEditMode, _viewModelFactoryMock.Object, _flagshipProductViewModelFactoryMock.Object);
             controller.ControllerContext = new ControllerContext(_httpContextBaseMock.Object, new RouteData(), controller);
 
             return controller;

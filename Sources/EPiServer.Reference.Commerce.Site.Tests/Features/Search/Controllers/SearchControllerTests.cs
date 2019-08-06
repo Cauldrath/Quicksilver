@@ -47,6 +47,7 @@ namespace EPiServer.Reference.Commerce.Site.Tests.Features.Search.Controllers
 
         SearchController _subject;
         Mock<SearchViewModelFactory> _searchViewModelFactoryMock;
+        Mock<FlagshipProductIndexViewModelFactory> _flagshipProductIndexViewModelFactoryMock;
         Mock<ISearchService> _searchServiceMock;
         Mock<ReferenceConverter> _referenceConverterMock;
         Mock<IRecommendationService> _recommendationServiceMock;
@@ -61,6 +62,7 @@ namespace EPiServer.Reference.Commerce.Site.Tests.Features.Search.Controllers
             _items = new Dictionary<string, object>();
             _searchServiceMock = new Mock<ISearchService>();
             _searchViewModelFactoryMock = new Mock<SearchViewModelFactory>(null, null);
+            _flagshipProductIndexViewModelFactoryMock = new Mock<FlagshipProductIndexViewModelFactory>(null, null);
             _referenceConverterMock = new Mock<ReferenceConverter>(null, null);
             _recommendationServiceMock = new Mock<IRecommendationService>();
             _searchViewModel = new SearchViewModel<SearchPage>
@@ -91,7 +93,8 @@ namespace EPiServer.Reference.Commerce.Site.Tests.Features.Search.Controllers
 
             _subject = new SearchController(
                 _searchViewModelFactoryMock.Object,
-                _searchServiceMock.Object);
+                _searchServiceMock.Object,
+                _flagshipProductIndexViewModelFactoryMock.Object);
 
             _httpRequestMock = new Mock<HttpRequestBase>();
             _httpRequestMock.SetupGet(x => x.HttpMethod).Returns("GET");
