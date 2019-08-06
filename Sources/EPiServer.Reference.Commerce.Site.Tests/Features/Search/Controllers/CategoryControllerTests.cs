@@ -63,6 +63,7 @@ namespace EPiServer.Reference.Commerce.Site.Tests.Features.Search.Controllers
 
         private readonly CategoryController _subject;
         private readonly Mock<SearchViewModelFactory> _viewModelFactoryMock;
+        private readonly Mock<FlagshipProductIndexViewModelFactory> _flagshipProductIndexViewModelFactoryMock;
         private readonly Mock<HttpRequestBase> _httpRequestMock;
         Mock<IRecommendationService> _recommendationServiceMock;
 
@@ -72,6 +73,7 @@ namespace EPiServer.Reference.Commerce.Site.Tests.Features.Search.Controllers
             referenceConverterMock.Setup(x => x.GetContentLink(It.IsAny<string>()))
                 .Returns(() => new ContentReference(1));
             _viewModelFactoryMock = new Mock<SearchViewModelFactory>(null, null);
+            _flagshipProductIndexViewModelFactoryMock = new Mock<FlagshipProductIndexViewModelFactory>(null, null);
             _httpRequestMock = new Mock<HttpRequestBase>();
             _recommendationServiceMock = new Mock<IRecommendationService>();
 
@@ -79,7 +81,8 @@ namespace EPiServer.Reference.Commerce.Site.Tests.Features.Search.Controllers
             context.SetupGet(x => x.Request).Returns(_httpRequestMock.Object);
 
             _subject = new CategoryController(
-                _viewModelFactoryMock.Object);
+                _viewModelFactoryMock.Object,
+                _flagshipProductIndexViewModelFactoryMock.Object);
             _subject.ControllerContext = new ControllerContext(context.Object, new RouteData(), _subject);
         }
     }

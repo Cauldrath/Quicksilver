@@ -11,19 +11,29 @@ namespace EPiServer.Reference.Commerce.Site.Features.Search.Controllers
     {
         private readonly SearchViewModelFactory _viewModelFactory;
         private readonly ISearchService _searchService;
+        private readonly FlagshipProductIndexViewModelFactory _fsProductIndexViewModelFactory;
 
         public SearchController(
             SearchViewModelFactory viewModelFactory, 
-            ISearchService searchService)
+            ISearchService searchService,
+            FlagshipProductIndexViewModelFactory fsProductIndexViewModelFactory)
         {
             _viewModelFactory = viewModelFactory;
             _searchService = searchService;
+            _fsProductIndexViewModelFactory = fsProductIndexViewModelFactory;
         }
 
         [ValidateInput(false)]
         [AcceptVerbs(HttpVerbs.Get | HttpVerbs.Post)]
         public ActionResult Index(SearchPage currentPage, FilterOptionViewModel filterOptions)
         {
+            if (Request.Headers.Get("Accept") == "application/json")
+            {
+                var fsProductIndex = _fsProductIndexViewModelFactory.Create(currentPage, filterOptions);
+                var json = Shared.FlagshipViewModels.Serialize.ToJson(fsProductIndex);
+                return Content(json, "application/json");
+            }
+
             var viewModel = _viewModelFactory.Create(currentPage, filterOptions);
 
             return View(viewModel);

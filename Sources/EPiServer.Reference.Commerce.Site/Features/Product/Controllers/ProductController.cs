@@ -10,16 +10,28 @@ namespace EPiServer.Reference.Commerce.Site.Features.Product.Controllers
     {
         private readonly bool _isInEditMode;
         private readonly CatalogEntryViewModelFactory _viewModelFactory;
+        private readonly FlagshipProductViewModelFactory _fsProductViewModelFactory;
 
-        public ProductController(IsInEditModeAccessor isInEditModeAccessor, CatalogEntryViewModelFactory viewModelFactory)
+        public ProductController(
+            IsInEditModeAccessor isInEditModeAccessor,
+            CatalogEntryViewModelFactory viewModelFactory,
+            FlagshipProductViewModelFactory flagshipViewModelFactory)
         {
             _isInEditMode = isInEditModeAccessor();
             _viewModelFactory = viewModelFactory;
+            _fsProductViewModelFactory = flagshipViewModelFactory;
         }
 
         [HttpGet]
         public ActionResult Index(FashionProduct currentContent, string entryCode = "", bool useQuickview = false, bool skipTracking = false)
         {
+            if (Request.Headers.Get("Accept") == "application/json")
+            {
+                var fsProduct = _fsProductViewModelFactory.Create(currentContent, entryCode);
+                var json = Shared.FlagshipViewModels.Serialize.ToJson(fsProduct);
+                return Content(json, "application/json");
+            }
+
             var viewModel = _viewModelFactory.Create(currentContent, entryCode);
             viewModel.SkipTracking = skipTracking;
 

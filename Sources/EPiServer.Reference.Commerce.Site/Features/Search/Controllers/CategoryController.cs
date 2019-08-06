@@ -9,18 +9,28 @@ namespace EPiServer.Reference.Commerce.Site.Features.Search.Controllers
     public class CategoryController : ContentController<FashionNode>
     {
         private readonly SearchViewModelFactory _viewModelFactory;
+        private readonly FlagshipProductIndexViewModelFactory _fsProductIndexViewModelFactory;
 
         public CategoryController(
-            SearchViewModelFactory viewModelFactory)
+            SearchViewModelFactory viewModelFactory,
+            FlagshipProductIndexViewModelFactory fsProductIndexViewModelFactory)
         {
             _viewModelFactory = viewModelFactory;
+            _fsProductIndexViewModelFactory = fsProductIndexViewModelFactory;
         }
 
         [AcceptVerbs(HttpVerbs.Get | HttpVerbs.Post)]
-        public ViewResult Index(FashionNode currentContent, FilterOptionViewModel viewModel)
+        public ActionResult Index(FashionNode currentContent, FilterOptionViewModel viewModel)
         {
+            if (Request.Headers.Get("Accept") == "application/json")
+            {
+                var fsProductIndex = _fsProductIndexViewModelFactory.Create(currentContent, viewModel);
+                var json = Shared.FlagshipViewModels.Serialize.ToJson(fsProductIndex);
+                return Content(json, "application/json");
+            }
+
             var model = _viewModelFactory.Create(currentContent, viewModel);
-         
+
             return View(model);
         }
 
