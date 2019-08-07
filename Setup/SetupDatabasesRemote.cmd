@@ -1,6 +1,7 @@
 :: Setup EPiServer CMS and Commerce databases
 @echo off
 
+set sql_url=aa1lssxobtxmu0x.ccfk5oghgocn.us-east-2.rds.amazonaws.com
 set cms_db=Quicksilver.Cms
 set commerce_db=Quicksilver.Commerce
 set user=brander
@@ -19,7 +20,7 @@ if "%commerce_core%"=="" (
 	exit /b
 )
 
-set sql=sqlcmd -S . -E
+set sql=sqlcmd -S "%sql_url%" -U %user% -P %password%
 
 echo Dropping databases...
 %sql% -Q "EXEC msdb.dbo.sp_delete_database_backuphistory N'%cms_db%'"
