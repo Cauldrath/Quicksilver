@@ -19,23 +19,32 @@ namespace EPiServer.Reference.Commerce.Site.Features.Cart.Controllers
         private readonly IOrderRepository _orderRepository;
         private readonly IRecommendationService _recommendationService;
         private readonly CartViewModelFactory _cartViewModelFactory;
-        
+        private readonly FlagshipCartViewModelFactory _fsCartViewModelFactory;
 
         public CartController(
             ICartService cartService,
             IOrderRepository orderRepository,
             IRecommendationService recommendationService,
-            CartViewModelFactory cartViewModelFactory)
+            CartViewModelFactory cartViewModelFactory,
+            FlagshipCartViewModelFactory fsCartViewModelFactory)
         {
             _cartService = cartService;
             _orderRepository = orderRepository;
             _recommendationService = recommendationService;
             _cartViewModelFactory = cartViewModelFactory;
+            _fsCartViewModelFactory = fsCartViewModelFactory;
         }
 
         [AcceptVerbs(HttpVerbs.Get | HttpVerbs.Post)]
         public ActionResult MiniCartDetails()
         {
+            if (Request.Headers.Get("Accept") == "application/json")
+            {
+                var fsCart = _fsCartViewModelFactory.Create(Cart);
+                var json = Shared.FlagshipViewModels.Serialize.ToJson(fsCart);
+                return Content(json, "application/json");
+            }
+
             var viewModel = _cartViewModelFactory.CreateMiniCartViewModel(Cart);
             return PartialView("_MiniCartDetails", viewModel);
         }
@@ -43,6 +52,13 @@ namespace EPiServer.Reference.Commerce.Site.Features.Cart.Controllers
         [AcceptVerbs(HttpVerbs.Get | HttpVerbs.Post)]
         public ActionResult LargeCart()
         {
+            if (Request.Headers.Get("Accept") == "application/json")
+            {
+                var fsCart = _fsCartViewModelFactory.Create(Cart);
+                var json = Shared.FlagshipViewModels.Serialize.ToJson(fsCart);
+                return Content(json, "application/json");
+            }
+
             var viewModel = _cartViewModelFactory.CreateLargeCartViewModel(Cart);
             return PartialView("LargeCart", viewModel);
         }

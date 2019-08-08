@@ -367,6 +367,7 @@
     <Compile Include="Features\AddressBook\ViewModels\AddressViewModel.cs" />
     <Compile Include="Features\Cart\Services\AddToCartResult.cs" />
     <Compile Include="Features\Cart\Extensions\CartExtensions.cs" />
+    <Compile Include="Features\Cart\ViewModelFactories\FlagshipCartViewModelFactory.cs" />
     <Compile Include="Features\Cart\ViewModels\CartViewModelBase.cs" />
     <Compile Include="Features\Cart\ViewModels\ShipmentViewModel.cs" />
     <Compile Include="Features\Cart\ViewModels\UpdateShippingMethodViewModel.cs" />

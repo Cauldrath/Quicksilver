@@ -75,11 +75,13 @@ namespace EPiServer.Reference.Commerce.Site.Tests.Features.Cart.Controllers
         private readonly Mock<ICartService> _cartServiceMock;
         private readonly Mock<IOrderRepository> _orderRepositoryMock;
         private readonly Mock<CartViewModelFactory> _cartViewModelFactoryMock;
+        private readonly Mock<FlagshipCartViewModelFactory> _flagshipCartViewModelFactoryMock;
 
         public CartControllerTests()
         {
             _cartServiceMock = new Mock<ICartService>();
             _cartViewModelFactoryMock = new Mock<CartViewModelFactory>(null, null, null, null, null);
+            _flagshipCartViewModelFactoryMock = new Mock<FlagshipCartViewModelFactory>(null, null, null, null, null);
             _orderRepositoryMock = new Mock<IOrderRepository>();
             _cartServiceMock
                 .Setup(x => x.AddToCart(It.IsAny<ICart>(), "Code 1", It.IsAny<decimal>()))
@@ -91,7 +93,7 @@ namespace EPiServer.Reference.Commerce.Site.Tests.Features.Cart.Controllers
                     };
                 })
                 .Verifiable();
-            _subject = new CartController(_cartServiceMock.Object, _orderRepositoryMock.Object, Mock.Of<IRecommendationService>(), _cartViewModelFactoryMock.Object);
+            _subject = new CartController(_cartServiceMock.Object, _orderRepositoryMock.Object, Mock.Of<IRecommendationService>(), _cartViewModelFactoryMock.Object, _flagshipCartViewModelFactoryMock.Object);
         }
     }
 }
