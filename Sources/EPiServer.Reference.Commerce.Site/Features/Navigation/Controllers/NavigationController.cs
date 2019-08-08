@@ -1,14 +1,11 @@
-﻿using EPiServer.Commerce.Catalog.ContentTypes;
-using EPiServer.Core;
+﻿using EPiServer.Core;
 using EPiServer.Framework.Localization;
 using EPiServer.Reference.Commerce.Site.Features.Cart.Services;
 using EPiServer.Reference.Commerce.Site.Features.Cart.ViewModelFactories;
 using EPiServer.Reference.Commerce.Site.Features.Navigation.ViewModels;
 using EPiServer.Reference.Commerce.Site.Features.Start.Pages;
-using EPiServer.ServiceLocation;
 using EPiServer.SpecializedProperties;
 using EPiServer.Web.Mvc.Html;
-using Mediachase.Commerce.Catalog;
 using System.Web.Mvc;
 
 namespace EPiServer.Reference.Commerce.Site.Features.Navigation.Controllers

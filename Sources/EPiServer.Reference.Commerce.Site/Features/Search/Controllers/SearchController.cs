@@ -29,7 +29,7 @@ namespace EPiServer.Reference.Commerce.Site.Features.Search.Controllers
         {
             if (Request.Headers.Get("Accept").Contains("application/json"))
             {
-                var fsProductIndex = _fsProductIndexViewModelFactory.Create(currentPage, filterOptions);
+                var fsProductIndex = _fsProductIndexViewModelFactory.Create(currentPage, filterOptions, Request.Url);
                 var json = Shared.FlagshipViewModels.Serialize.ToJson(fsProductIndex);
                 return Content(json, "application/json");
             }

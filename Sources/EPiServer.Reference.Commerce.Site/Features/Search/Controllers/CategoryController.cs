@@ -24,7 +24,7 @@ namespace EPiServer.Reference.Commerce.Site.Features.Search.Controllers
         {
             if (Request.Headers.Get("Accept").Contains("application/json"))
             {
-                var fsProductIndex = _fsProductIndexViewModelFactory.Create(currentContent, viewModel);
+                var fsProductIndex = _fsProductIndexViewModelFactory.Create(currentContent, viewModel, Request.Url);
                 var json = Shared.FlagshipViewModels.Serialize.ToJson(fsProductIndex);
                 return Content(json, "application/json");
             }

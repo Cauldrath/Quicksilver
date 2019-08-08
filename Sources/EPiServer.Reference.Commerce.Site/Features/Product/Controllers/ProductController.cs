@@ -27,7 +27,7 @@ namespace EPiServer.Reference.Commerce.Site.Features.Product.Controllers
         {
             if (Request.Headers.Get("Accept").Contains("application/json"))
             {
-                var fsProduct = _fsProductViewModelFactory.Create(currentContent, entryCode);
+                var fsProduct = _fsProductViewModelFactory.Create(currentContent, entryCode, Request.Url);
                 var json = Shared.FlagshipViewModels.Serialize.ToJson(fsProduct);
                 return Content(json, "application/json");
             }
