@@ -22,7 +22,7 @@ namespace EPiServer.Reference.Commerce.Site.Features.Search.Controllers
         [AcceptVerbs(HttpVerbs.Get | HttpVerbs.Post)]
         public ActionResult Index(FashionNode currentContent, FilterOptionViewModel viewModel)
         {
-            if (Request.Headers.Get("Accept") == "application/json")
+            if (Request.Headers.Get("Accept").Contains("application/json"))
             {
                 var fsProductIndex = _fsProductIndexViewModelFactory.Create(currentContent, viewModel);
                 var json = Shared.FlagshipViewModels.Serialize.ToJson(fsProductIndex);
