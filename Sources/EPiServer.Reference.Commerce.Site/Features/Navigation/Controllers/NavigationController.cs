@@ -1,11 +1,14 @@
-﻿using EPiServer.Core;
+﻿using EPiServer.Commerce.Catalog.ContentTypes;
+using EPiServer.Core;
 using EPiServer.Framework.Localization;
 using EPiServer.Reference.Commerce.Site.Features.Cart.Services;
 using EPiServer.Reference.Commerce.Site.Features.Cart.ViewModelFactories;
 using EPiServer.Reference.Commerce.Site.Features.Navigation.ViewModels;
 using EPiServer.Reference.Commerce.Site.Features.Start.Pages;
+using EPiServer.ServiceLocation;
 using EPiServer.SpecializedProperties;
 using EPiServer.Web.Mvc.Html;
+using Mediachase.Commerce.Catalog;
 using System.Web.Mvc;
 
 namespace EPiServer.Reference.Commerce.Site.Features.Navigation.Controllers
@@ -72,6 +75,32 @@ namespace EPiServer.Reference.Commerce.Site.Features.Navigation.Controllers
             }
 
             return PartialView(viewModel);
+        }
+
+        public ActionResult Menu()
+        {
+            var startPage = _contentLoader.Get<StartPage>(ContentReference.StartPage);
+            var rootCategory = new Shared.FlagshipViewModels.Category
+            {
+                Id = "root",
+                Title = "root",
+                Categories = new System.Collections.Generic.List<Shared.FlagshipViewModels.Category>()
+            };
+
+            foreach (var link in startPage.MainMenu)
+            {
+                string title = link.Title ?? link.Text ?? "";
+                if (title != "Home") {
+                    rootCategory.Categories.Add(new Shared.FlagshipViewModels.Category
+                    {
+                        Title = title,
+                        Id = _urlHelper.ContentUrl(link.Href)
+                    });
+                }
+            }
+
+            var json = Shared.FlagshipViewModels.Serialize.ToJson(rootCategory);
+            return Content(json, "application/json");
         }
     }
 }
