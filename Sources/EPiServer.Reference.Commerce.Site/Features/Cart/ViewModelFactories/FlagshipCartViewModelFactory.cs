@@ -98,7 +98,7 @@ namespace EPiServer.Reference.Commerce.Site.Features.Cart.ViewModelFactories
                 ItemId = lineItem.Code,
                 OriginalPrice = new Shared.FlagshipViewModels.CurrencyValue(_pricingService.GetDefaultPrice(lineItem.Code).UnitPrice),
                 Price = new Shared.FlagshipViewModels.CurrencyValue(price),
-                ProductId = lineItem.Code,
+                ProductId = entry.GetUrl(_relationRepository, _urlResolver).Substring(1).Split('?')[0],
                 Quantity = lineItem.Quantity,
                 Title = entry.DisplayName,
                 TotalPrice = new Shared.FlagshipViewModels.CurrencyValue(price * lineItem.Quantity)
