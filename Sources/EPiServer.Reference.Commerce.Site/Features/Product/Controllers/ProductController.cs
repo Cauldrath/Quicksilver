@@ -25,9 +25,9 @@ namespace EPiServer.Reference.Commerce.Site.Features.Product.Controllers
         [HttpGet]
         public ActionResult Index(FashionProduct currentContent, string entryCode = "", bool useQuickview = false, bool skipTracking = false)
         {
-            if (Request.Headers.Get("Accept") == "application/json")
+            if (Request.Headers.Get("Accept").Contains("application/json"))
             {
-                var fsProduct = _fsProductViewModelFactory.Create(currentContent, entryCode);
+                var fsProduct = _fsProductViewModelFactory.Create(currentContent, entryCode, Request.Url);
                 var json = Shared.FlagshipViewModels.Serialize.ToJson(fsProduct);
                 return Content(json, "application/json");
             }

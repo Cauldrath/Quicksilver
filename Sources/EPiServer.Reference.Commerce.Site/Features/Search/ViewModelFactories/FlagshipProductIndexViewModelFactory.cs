@@ -21,14 +21,14 @@ namespace EPiServer.Reference.Commerce.Site.Features.Search.ViewModelFactories
             _localizationService = localizationService;
         }
 
-        public virtual ProductIndex Create(IContent currentContent, FilterOptionViewModel viewModel)
+        public virtual ProductIndex Create(IContent currentContent, FilterOptionViewModel viewModel, System.Uri RequestUrl)
         {
             var customSearchResult = _searchService.Search(currentContent, viewModel);
             var totalResultCount = customSearchResult.SearchResult?.TotalCount ?? 0;
 
             return new ProductIndex
             {
-                Products = CreateProducts(customSearchResult.ProductViewModels),
+                Products = CreateProducts(customSearchResult.ProductViewModels, RequestUrl),
                 Keyword = viewModel.Q,
                 Limit = totalResultCount, // Results aren't paginated
                 Page = 1,
@@ -40,15 +40,18 @@ namespace EPiServer.Reference.Commerce.Site.Features.Search.ViewModelFactories
             };
         }
 
-        protected virtual List<Shared.FlagshipViewModels.Product> CreateProducts(IEnumerable<ProductTileViewModel> items)
+        protected virtual List<Shared.FlagshipViewModels.Product> CreateProducts(IEnumerable<ProductTileViewModel> items, System.Uri RequestUrl)
         {
             return items
                 .Select(item =>
                 {
+                    var imageUrl = new System.Uri(item.ImageUrl);
+                    var uri = new System.Uri(RequestUrl, imageUrl.PathAndQuery);
+
                     var Product = new Shared.FlagshipViewModels.Product
                     {
                         Title = item.DisplayName,
-                        Images = new List<Image> { new Image { Uri = item.ImageUrl } },
+                        Images = new List<Image> { new Image { Uri = uri.AbsoluteUri } },
                         Brand = item.Brand,
                         Id = item.Code,
                         Available = item.IsAvailable
