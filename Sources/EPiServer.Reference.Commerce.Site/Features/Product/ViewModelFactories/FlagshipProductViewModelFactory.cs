@@ -31,11 +31,11 @@ namespace EPiServer.Reference.Commerce.Site.Features.Product.ViewModelFactories
             _catalogContentService = catalogContentService;
         }
 
-        public virtual Shared.FlagshipViewModels.Product Create(FashionProduct currentContent, string variationCode)
+        public virtual Shared.FlagshipViewModels.Product Create(FashionProduct currentContent, string variationCode, System.Uri RequestUrl)
         {
             var variants = _catalogContentService.GetVariants<FashionVariant>(currentContent).ToList();
             var selectedVariant = variants.Find(variant => variant.Code == variationCode);
-            var formattedVariants = variants.Select(CreateVariant).ToList();
+            var formattedVariants = CreateVariants(variants, RequestUrl);
 
             var code = selectedVariant?.Code ?? currentContent.Code;
             var images = selectedVariant?.GetAssets<IContentImage>(_contentLoader, _urlResolver) ?? currentContent.GetAssets<IContentImage>(_contentLoader, _urlResolver);
@@ -47,7 +47,10 @@ namespace EPiServer.Reference.Commerce.Site.Features.Product.ViewModelFactories
                 Description = (currentContent.LongDescription ?? currentContent.Description).ToString(),
                 Handle = selectedVariant?.SeoUri ?? currentContent.SeoUri,
                 Id = code,
-                Images = images.Select(uri => new Image { Uri = uri }).ToList(),
+                Images = images.Select(relativeUrl => {
+                    var uri = new System.Uri(RequestUrl, relativeUrl);
+                    return new Image { Uri = uri.AbsoluteUri };
+                }).ToList(),
                 Options = CreateOptions(variants),
                 OriginalPrice = CreateCurrencyValue(_pricingService.GetDefaultPrice(code)),
                 Price = CreateCurrencyValue(_pricingService.GetPrice(code)),
@@ -87,31 +90,38 @@ namespace EPiServer.Reference.Commerce.Site.Features.Product.ViewModelFactories
             };
         }
 
-        protected virtual Variant CreateVariant(FashionVariant variant)
+        protected virtual List<Variant> CreateVariants(IEnumerable<FashionVariant> variants, System.Uri baseUrl)
         {
-            var id = variant.Code;
-
-            return new Variant
+            return variants.Select(variant =>
             {
-                Id = id,
-                OptionValues = new List<OptionValue>() {
-                    new OptionValue
-                    {
-                        Name = "Color",
-                        Value = variant.Color
+                var id = variant.Code;
+
+                return new Variant
+                {
+                    Id = id,
+                    OptionValues = new List<OptionValue>() {
+                        new OptionValue
+                        {
+                            Name = "Color",
+                            Value = variant.Color
+                        },
+                        new OptionValue
+                        {
+                            Name = "Size",
+                            Value = variant.Size
+                        }
                     },
-                    new OptionValue
+                    Price = CreateCurrencyValue(_pricingService.GetPrice(id)),
+                    OriginalPrice = CreateCurrencyValue(_pricingService.GetDefaultPrice(id)),
+                    Title = variant.DisplayName,
+                    Images = variant.GetAssets<IContentImage>(_contentLoader, _urlResolver).Select(relativeUrl =>
                     {
-                        Name = "Size",
-                        Value = variant.Size
-                    }
-                },
-                Price = CreateCurrencyValue(_pricingService.GetPrice(id)),
-                OriginalPrice = CreateCurrencyValue(_pricingService.GetDefaultPrice(id)),
-                Title = variant.DisplayName,
-                Images = variant.GetAssets<IContentImage>(_contentLoader, _urlResolver).Select(uri => new Image { Uri = uri }).ToList(),
-                Available = _pricingService.GetDefaultPrice(id) != null
-            };
+                        var uri = new System.Uri(baseUrl, relativeUrl);
+                        return new Image { Uri = uri.AbsoluteUri };
+                    }).ToList(),
+                    Available = _pricingService.GetDefaultPrice(id) != null
+                };
+            }).ToList();
         }
 
         protected virtual CurrencyValue CreateCurrencyValue(IPriceValue price)
