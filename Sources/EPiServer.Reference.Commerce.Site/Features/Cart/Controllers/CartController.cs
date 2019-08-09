@@ -40,7 +40,7 @@ namespace EPiServer.Reference.Commerce.Site.Features.Cart.Controllers
         {
             if (Request.Headers.Get("Accept").Contains("application/json"))
             {
-                var fsCart = _fsCartViewModelFactory.Create(Cart);
+                var fsCart = _fsCartViewModelFactory.Create(Cart, Request.Url);
                 var json = Shared.FlagshipViewModels.Serialize.ToJson(fsCart);
                 return Content(json, "application/json");
             }
@@ -54,7 +54,7 @@ namespace EPiServer.Reference.Commerce.Site.Features.Cart.Controllers
         {
             if (Request.Headers.Get("Accept").Contains("application/json"))
             {
-                var fsCart = _fsCartViewModelFactory.Create(Cart);
+                var fsCart = _fsCartViewModelFactory.Create(Cart, Request.Url);
                 var json = Shared.FlagshipViewModels.Serialize.ToJson(fsCart);
                 return Content(json, "application/json");
             }
