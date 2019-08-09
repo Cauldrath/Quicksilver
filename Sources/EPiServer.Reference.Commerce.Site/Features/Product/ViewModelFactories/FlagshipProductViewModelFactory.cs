@@ -53,7 +53,7 @@ namespace EPiServer.Reference.Commerce.Site.Features.Product.ViewModelFactories
                 }).ToList(),
                 Options = CreateOptions(variants),
                 OriginalPrice = CreateCurrencyValue(_pricingService.GetDefaultPrice(code)),
-                Price = CreateCurrencyValue(_pricingService.GetPrice(code)),
+                Price = CreateCurrencyValue(_pricingService.GetDiscountPrice(code) ?? _pricingService.GetPrice(code)),
                 Title = selectedVariant?.DisplayName ?? currentContent.DisplayName,
                 Variants = formattedVariants
             };
@@ -111,7 +111,7 @@ namespace EPiServer.Reference.Commerce.Site.Features.Product.ViewModelFactories
                             Value = variant.Size
                         }
                     },
-                    Price = CreateCurrencyValue(_pricingService.GetPrice(id)),
+                    Price = CreateCurrencyValue(_pricingService.GetDiscountPrice(id) ?? _pricingService.GetPrice(id)),
                     OriginalPrice = CreateCurrencyValue(_pricingService.GetDefaultPrice(id)),
                     Title = variant.DisplayName,
                     Images = variant.GetAssets<IContentImage>(_contentLoader, _urlResolver).Select(relativeUrl =>
