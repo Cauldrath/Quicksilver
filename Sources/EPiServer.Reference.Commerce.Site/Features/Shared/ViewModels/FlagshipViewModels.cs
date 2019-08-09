@@ -1390,6 +1390,19 @@ namespace EPiServer.Reference.Commerce.Site.Features.Shared.FlagshipViewModels
 
         [JsonProperty("value", Required = Required.Always)]
         public string Value { get; set; }
+
+        public CurrencyValue()
+        {
+        }
+
+        public CurrencyValue(Mediachase.Commerce.Money price)
+        {
+            if (price != null)
+            {
+                CurrencyCode = price.Currency;
+                Value = price.Amount.ToString();
+            }
+        }
     }
 
     /// <summary>
