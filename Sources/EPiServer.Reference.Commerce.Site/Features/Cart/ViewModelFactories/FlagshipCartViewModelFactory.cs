@@ -53,7 +53,7 @@ namespace EPiServer.Reference.Commerce.Site.Features.Cart.ViewModelFactories
             _urlResolver = urlResolver;
         }
 
-        public virtual Shared.FlagshipViewModels.Cart Create(ICart cart)
+        public virtual Shared.FlagshipViewModels.Cart Create(ICart cart, System.Uri RequestUrl)
         {
             if (cart == null)
             {
@@ -70,7 +70,7 @@ namespace EPiServer.Reference.Commerce.Site.Features.Cart.ViewModelFactories
             return new Shared.FlagshipViewModels.Cart
             {
                 Items = items.Select(item => {
-                    return ParseLineItem(cart, item, item.GetEntryContent(_referenceConverter, _contentLoader));
+                    return ParseLineItem(cart, item, item.GetEntryContent(_referenceConverter, _contentLoader), RequestUrl);
                 }).ToList(),
                 Subtotal = new Shared.FlagshipViewModels.CurrencyValue(_orderGroupCalculator.GetSubTotal(cart)),
                 Tax = new Shared.FlagshipViewModels.CurrencyValue(_orderGroupCalculator.GetTaxTotal(cart)),
@@ -85,7 +85,7 @@ namespace EPiServer.Reference.Commerce.Site.Features.Cart.ViewModelFactories
                 .Where(c => !ContentReference.IsNullOrEmpty(_referenceConverter.GetContentLink(c.Code)));
         }
 
-        public virtual Shared.FlagshipViewModels.CartItem ParseLineItem(ICart cart, ILineItem lineItem, EntryContentBase entry)
+        public virtual Shared.FlagshipViewModels.CartItem ParseLineItem(ICart cart, ILineItem lineItem, EntryContentBase entry, System.Uri RequestUrl)
         {
             var images = entry.GetAssets<IContentImage>(_contentLoader, _urlResolver);
             var price = _pricingService.GetDiscountPrice(lineItem.Code).UnitPrice;
@@ -94,7 +94,11 @@ namespace EPiServer.Reference.Commerce.Site.Features.Cart.ViewModelFactories
             {
                 Available = _pricingService.GetPrice(entry.Code) != null,
                 Handle = entry.GetUrl(_relationRepository, _urlResolver),
-                Images = images.Select(uri => new Shared.FlagshipViewModels.Image { Uri = uri }).ToList(),
+
+                Images = images.Select(relativeUrl => {
+                    var uri = new System.Uri(RequestUrl, relativeUrl);
+                    return new Shared.FlagshipViewModels.Image { Uri = uri.AbsoluteUri };
+                }).ToList(),
                 ItemId = lineItem.Code,
                 OriginalPrice = new Shared.FlagshipViewModels.CurrencyValue(_pricingService.GetDefaultPrice(lineItem.Code).UnitPrice),
                 Price = new Shared.FlagshipViewModels.CurrencyValue(price),
