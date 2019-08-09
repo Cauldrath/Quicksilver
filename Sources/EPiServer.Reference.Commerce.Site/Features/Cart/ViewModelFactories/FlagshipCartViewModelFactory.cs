@@ -88,7 +88,7 @@ namespace EPiServer.Reference.Commerce.Site.Features.Cart.ViewModelFactories
         public virtual Shared.FlagshipViewModels.CartItem ParseLineItem(ICart cart, ILineItem lineItem, EntryContentBase entry)
         {
             var images = entry.GetAssets<IContentImage>(_contentLoader, _urlResolver);
-            var price = _pricingService.GetPrice(lineItem.Code).UnitPrice;
+            var price = _pricingService.GetDiscountPrice(lineItem.Code).UnitPrice;
 
             var viewModel = new Shared.FlagshipViewModels.CartItem
             {
@@ -125,7 +125,7 @@ namespace EPiServer.Reference.Commerce.Site.Features.Cart.ViewModelFactories
                     var sizeValues = new List<Shared.FlagshipViewModels.OptionValue>();
                     sizeValues.Add(new Shared.FlagshipViewModels.OptionValue
                     {
-                        Name = "Size",
+                        Name = variant.Size,
                         Value = variant.Size
                     });
                     viewModel.Options.Add(new Shared.FlagshipViewModels.Option
@@ -138,7 +138,7 @@ namespace EPiServer.Reference.Commerce.Site.Features.Cart.ViewModelFactories
                     var colorValues = new List<Shared.FlagshipViewModels.OptionValue>();
                     colorValues.Add(new Shared.FlagshipViewModels.OptionValue
                     {
-                        Name = "Color",
+                        Name = variant.Color,
                         Value = variant.Color
                     });
                     viewModel.Options.Add(new Shared.FlagshipViewModels.Option
