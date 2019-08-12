@@ -1,0 +1,27 @@
+﻿@model EPiServer.Reference.Commerce.Site.Features.Search.ViewModels.FindSearchPageViewModel
+
+@{
+    ViewBag.Title = "Index";
+    Layout = null;
+}
+
+@using (Html.BeginForm(FormMethod.Post))
+{
+    <input type="text" tabindex="1" name="q" value="@Model.SearchQuery" />
+    <input type="submit" tabindex="2" class="btn" value="Search" />
+}
+@if (Model.Results != null)
+{
+    <p>Your search for <i>@Model.SearchQuery</i> resulted in @Model.Results.TotalMatching hits</p>
+    <div class="listResult">
+        <ul>
+            @foreach (var item in Model.Results)
+            {
+                <li>
+                    <h4><a href="@item.Url">@item.Title</a></h4>
+                    @item.Excerpt
+                </li>
+            }
+        </ul>
+    </div>
+}
