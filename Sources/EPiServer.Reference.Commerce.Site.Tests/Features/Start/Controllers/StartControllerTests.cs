@@ -8,6 +8,7 @@ using EPiServer.Reference.Commerce.Site.Features.Start.ViewModels;
 using Mediachase.Commerce;
 using Moq;
 using System.Linq;
+using System.Web.Mvc;
 using Xunit;
 
 namespace EPiServer.Reference.Commerce.Site.Tests.Features.Start.Controllers
@@ -60,6 +61,7 @@ namespace EPiServer.Reference.Commerce.Site.Tests.Features.Start.Controllers
 
         private Mock<MarketContentLoader> _marketContentLoaderMock;
         private Mock<PromotionProcessorResolver> _promotionProcessorResolverMock;
+        private Mock<UrlHelper> _urlHelperMock;
 
         private StartControllerForTest CreateController()
         {
@@ -68,8 +70,9 @@ namespace EPiServer.Reference.Commerce.Site.Tests.Features.Start.Controllers
 
             _promotionProcessorResolverMock = new Mock<PromotionProcessorResolver>(null, null, null);
             _marketContentLoaderMock = new Mock<MarketContentLoader>(_contentLoaderMock.Object, It.IsAny<CampaignInfoExtractor>(), _promotionProcessorResolverMock.Object);
+            _urlHelperMock = new Mock<UrlHelper>();
 
-            return new StartControllerForTest(_contentLoaderMock.Object, _currentMarketMock.Object, _marketContentLoaderMock.Object);
+            return new StartControllerForTest(_contentLoaderMock.Object, _currentMarketMock.Object, _marketContentLoaderMock.Object, _urlHelperMock.Object);
         }
 
         private class StartControllerForTest : StartController
@@ -77,8 +80,9 @@ namespace EPiServer.Reference.Commerce.Site.Tests.Features.Start.Controllers
             public StartControllerForTest(
                 IContentLoader contentLoader,
                 ICurrentMarket currentMarket,
-                MarketContentLoader marketContentLoader)
-                : base(contentLoader, currentMarket, marketContentLoader)
+                MarketContentLoader marketContentLoader,
+                UrlHelper urlHelper)
+                : base(contentLoader, currentMarket, marketContentLoader, urlHelper)
             { }
         }
     }

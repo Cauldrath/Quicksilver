@@ -16,15 +16,18 @@ namespace EPiServer.Reference.Commerce.Site.Features.Start.Controllers
         private readonly IContentLoader _contentLoader;
         private readonly ICurrentMarket _currentMarket;
         private readonly MarketContentLoader _marketContentFilter;
+        private readonly UrlHelper _urlHelper;
 
         public StartController(
             IContentLoader contentLoader,
             ICurrentMarket currentMarket,
-            MarketContentLoader marketContentFilter)
+            MarketContentLoader marketContentFilter,
+            UrlHelper urlHelper)
         {
             _contentLoader = contentLoader;
             _currentMarket = currentMarket;
             _marketContentFilter = marketContentFilter;
+            _urlHelper = urlHelper;
         }
 
         public ViewResult Index(StartPage currentPage)
@@ -44,6 +47,8 @@ namespace EPiServer.Reference.Commerce.Site.Features.Start.Controllers
 
             var promotionItemGroups = _marketContentFilter.GetPromotionItemsForMarket(_currentMarket.GetCurrentMarket()).GroupBy(x => x.Promotion);
 
+            var images = new List<string>();
+
             foreach (var promotionGroup in promotionItemGroups)
             {
                 var promotionItems = promotionGroup.First();
@@ -54,6 +59,7 @@ namespace EPiServer.Reference.Commerce.Site.Features.Start.Controllers
                     SelectionType = promotionItems.Condition.Type,
                     Items = GetProductsForPromotion(promotionItems).Take(3)
                 });
+                images.Add(EPiServer.Web.Mvc.Html.UrlExtensions.ContentUrl(_urlHelper, promotionGroup.Key.Banner));
             }
 
             return promotions;

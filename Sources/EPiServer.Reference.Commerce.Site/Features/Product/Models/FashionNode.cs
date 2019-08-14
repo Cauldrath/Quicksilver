@@ -2,6 +2,9 @@
 using EPiServer.Commerce.Catalog.DataAnnotations;
 using EPiServer.DataAnnotations;
 using EPiServer.Reference.Commerce.Site.Features.Product.Models;
+using EPiServer.Core;
+using EPiServer.DataAbstraction;
+using System.ComponentModel.DataAnnotations;
 
 namespace EPiServer.Reference.Commerce.Site.Features.Product.Models
 {
@@ -16,10 +19,18 @@ namespace EPiServer.Reference.Commerce.Site.Features.Product.Models
         typeof(FashionPackage),
         typeof(FashionBundle),
         typeof(FashionVariant),
-        typeof(NodeContent)
+        typeof(NodeContent),
+        typeof(IContent)
     })]
-    public class FashionNode : NodeContent
+    public class FashionNode : NodeContent, IContent
     {
-
+        [CultureSpecific]
+        [Display(
+            Name = "Page image",
+            Description = "Link to image that will be displayed on the page.",
+            GroupName = SystemTabNames.Content,
+            Order = 1)]
+        [UIHint(Web.UIHint.Image)]
+        public virtual ContentReference Image { get; set; }
     }
 }

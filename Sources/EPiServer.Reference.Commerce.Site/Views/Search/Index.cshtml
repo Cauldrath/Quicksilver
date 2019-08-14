@@ -8,6 +8,10 @@
 }
 
 <div class="row category-page">
+    @if (Model.Image != null)
+    {
+        <img src="@Url.ContentUrl(Model.Image)" />
+    }
     @if (Model.HasError)
     {
         <div class="col-md-12 text-danger">@Model.ErrorMessage</div>

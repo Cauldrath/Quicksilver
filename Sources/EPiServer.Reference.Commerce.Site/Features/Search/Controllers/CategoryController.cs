@@ -30,6 +30,7 @@ namespace EPiServer.Reference.Commerce.Site.Features.Search.Controllers
             }
 
             var model = _viewModelFactory.Create(currentContent, viewModel);
+            model.Image = currentContent.Image;
 
             return View(model);
         }

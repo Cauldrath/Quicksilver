@@ -16,5 +16,6 @@ namespace EPiServer.Reference.Commerce.Site.Features.Search.ViewModels
         public ISearchFacetGroup[] Facets { get; set; }
         public bool HasError { get; set; }
         public string ErrorMessage { get; set; }
+        public virtual ContentReference Image { get; set; }
     }
 }
